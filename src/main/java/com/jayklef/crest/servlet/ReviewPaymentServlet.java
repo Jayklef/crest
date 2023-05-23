@@ -1,7 +1,10 @@
 package com.jayklef.crest.servlet;
 
 import com.jayklef.crest.service.PaymentServices;
+import com.paypal.api.payments.PayerInfo;
 import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.ShippingAddress;
+import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.PayPalRESTException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -22,6 +25,18 @@ public class ReviewPaymentServlet extends HttpServlet {
         try {
             PaymentServices paymentServices = new PaymentServices();
             Payment payment = paymentServices.getPaymentDetails(paymentId);
+
+            PayerInfo payerInfo = payment.getPayer().getPayerInfo();
+            Transaction transaction = payment.getTransactions().get(0);
+            ShippingAddress shippingAddress = transaction.getItemList().getShippingAddress();
+
+            request.setAttribute("payer", payerInfo);
+            request.setAttribute("transaction", transaction);
+            request.setAttribute("shippingAddress", shippingAddress);
+
+            String url = "review/jsp?paymentId=" + paymentId + "&payerID" + payerId;
+            request.getRequestDispatcher(url).forward(request, response);
+
         }catch (PayPalRESTException exception){
             exception.printStackTrace();
             request.setAttribute("errorMessage", "Could not get payment details ");
