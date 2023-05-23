@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "AuthorizePaymentServlet", value = "/authorize_payment")
+@WebServlet("/authorize_payment")
 public class AuthorizePaymentServlet extends HttpServlet {
 
     public AuthorizePaymentServlet(){
