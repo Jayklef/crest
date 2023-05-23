@@ -54,6 +54,11 @@ public class PaymentServices {
         return redirectUrls;
     }
 
+    public Payment getPaymentDetails(String paymentId) throws PayPalRESTException {
+        APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);
+        return Payment.get(apiContext, paymentId);
+    }
+
     private List<Transaction> getTransactionInformation(OrderDetail orderDetail){
         Details details = new Details();
         details.setShipping(orderDetail.getShipping());
